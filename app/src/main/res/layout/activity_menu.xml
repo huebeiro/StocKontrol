@@ -8,10 +8,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/bg_gradient"
     tools:context="com.huebeiro.stockontrol.MenuActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/gridMenu"
+        android:layout_width="match_parent"
+        android:clickable="false"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"/>
+
 </RelativeLayout>
