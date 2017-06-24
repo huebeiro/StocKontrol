@@ -1,5 +1,6 @@
 package com.huebeiro.stockontrol;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -56,6 +57,10 @@ implements View.OnClickListener{
     public void onClick(View v) {
         int position = recyclerView.getChildAdapterPosition(v);
         switch (position){
+            case 0:
+                Intent intent = new Intent(this, DBTestActivity.class);
+                startActivity(intent);
+                break;
             default:
                 Toast.makeText(this, "Item clicked: " + position, Toast.LENGTH_SHORT).show();
         }

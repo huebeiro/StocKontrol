@@ -1,8 +1,16 @@
 package com.huebeiro.database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.huebeiro.model.Expense;
+import com.huebeiro.model.ExpenseItem;
+import com.huebeiro.model.Product;
+import com.huebeiro.model.ProductType;
+import com.huebeiro.model.Purchase;
+import com.huebeiro.model.PurchaseItem;
 
 /**
  * Author: adilson
@@ -11,14 +19,61 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 4;
     private static final String DATABASE = "StocKontrol.db";
     private static final String[] DATABASE_SCRIPT = {
-            //TODO Create Database Script
+            "CREATE TABLE " + ProductType.TABLE_NAME + " ( " +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "    name TEXT " +
+                    ");",
+            "INSERT INTO PRODUCTTYPE(name) values (\"\")",
+            "CREATE TABLE " + Product.TABLE_NAME + " ( " +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "    name TEXT, " +
+                    "    description TEXT, " +
+                    "    type INTEGER, " +
+                    "    FOREIGN KEY(type) REFERENCES " + ProductType.TABLE_NAME + "(id) ON DELETE CASCADE " +
+                    ");",
+            "CREATE TABLE " + Purchase.TABLE_NAME + " ( " +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "    note TEXT, " +
+                    "    date TEXT " +
+                    ");",
+            "CREATE TABLE " + PurchaseItem.TABLE_NAME + " ( " +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "    purchase INTEGER, " +
+                    "    product INTEGER, " +
+                    "    quantity INTEGER, " +
+                    "    price REAL, " +
+                    "    FOREIGN KEY(purchase) REFERENCES " + Purchase.TABLE_NAME + "(id) ON DELETE CASCADE, " +
+                    "    FOREIGN KEY(product) REFERENCES " + Product.TABLE_NAME + "(id) ON DELETE CASCADE " +
+                    ");",
+            "CREATE TABLE " + Expense.TABLE_NAME + " ( " +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "    note TEXT, " +
+                    "    date TEXT " +
+                    ");",
+            "CREATE TABLE " + ExpenseItem.TABLE_NAME + " ( " +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "    purchase INTEGER, " +
+                    "    product INTEGER, " +
+                    "    quantity INTEGER, " +
+                    "    price REAL, " +
+                    "    FOREIGN KEY(purchase) REFERENCES TIPO(id) ON DELETE CASCADE, " +
+                    "    FOREIGN KEY(product) REFERENCES TIPO(id) ON DELETE CASCADE " +
+                    ");"
     };
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE, null, VERSION);
+    }
+
+    public Cursor selectQuery(SQLiteDatabase database, String sqlQuery){
+        return database.rawQuery(sqlQuery, null);
+    }
+
+    public void executetQuery(SQLiteDatabase database, String sqlQuery){
+        database.execSQL(sqlQuery);
     }
 
     /**
@@ -57,8 +112,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if(oldVersion != newVersion) {
-            //TODO Clean Database
+            db.execSQL("DROP TABLE " + ExpenseItem.TABLE_NAME);
+            db.execSQL("DROP TABLE " + Expense.TABLE_NAME);
+            db.execSQL("DROP TABLE " + PurchaseItem.TABLE_NAME);
+            db.execSQL("DROP TABLE " + Purchase.TABLE_NAME);
+            db.execSQL("DROP TABLE " + Product.TABLE_NAME);
+            db.execSQL("DROP TABLE " + ProductType.TABLE_NAME);
             onCreate(db);
+        }
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            // Enable foreign key constraints
+            db.execSQL("PRAGMA foreign_keys=ON;");
         }
     }
 }
