@@ -58,7 +58,7 @@ implements View.OnClickListener{
         int position = recyclerView.getChildAdapterPosition(v);
         switch (position){
             case 0:
-                Intent intent = new Intent(this, DBTestActivity.class);
+                Intent intent = new Intent(this, ProductActivity.class);
                 startActivity(intent);
                 break;
             default:

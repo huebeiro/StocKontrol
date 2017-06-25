@@ -12,6 +12,8 @@ import com.huebeiro.model.ProductType;
 import com.huebeiro.model.Purchase;
 import com.huebeiro.model.PurchaseItem;
 
+import java.util.ArrayList;
+
 /**
  * Author: adilson
  * Date: 20/06/17
@@ -19,14 +21,19 @@ import com.huebeiro.model.PurchaseItem;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int VERSION = 4;
+    private static final int VERSION = 1;
     private static final String DATABASE = "StocKontrol.db";
     private static final String[] DATABASE_SCRIPT = {
             "CREATE TABLE " + ProductType.TABLE_NAME + " ( " +
                     "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "    name TEXT " +
                     ");",
-            "INSERT INTO PRODUCTTYPE(name) values (\"\")",
+            "INSERT INTO " + ProductType.TABLE_NAME + "(name) VALUES " +
+                    "(\"Office Supply\")," +
+                    "(\"Cleaning Supply\")," +
+                    "(\"Edibles\")," +
+                    "(\"Hygiene\")" +
+                    ";",
             "CREATE TABLE " + Product.TABLE_NAME + " ( " +
                     "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "    name TEXT, " +
@@ -34,6 +41,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "    type INTEGER, " +
                     "    FOREIGN KEY(type) REFERENCES " + ProductType.TABLE_NAME + "(id) ON DELETE CASCADE " +
                     ");",
+            "INSERT INTO Product(name, description, type) VALUES " +
+                    "(\"Pencil\", \"2B Yellow Pencil\", 1)," +
+                    "(\"Rag\", \"White Rag\", 2)," +
+                    "(\"Dorinhos\", \"Corn nacho snack\", 3)," +
+                    "(\"Soap\", \"Roses soap bar\", 4)",
             "CREATE TABLE " + Purchase.TABLE_NAME + " ( " +
                     "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "    note TEXT, " +
@@ -74,6 +86,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void executetQuery(SQLiteDatabase database, String sqlQuery){
         database.execSQL(sqlQuery);
+    }
+
+    public ArrayList<Product> getProducts(){
+        ArrayList<Product> products = new ArrayList<>();
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.query(Product.TABLE_NAME,new String[]{
+                "id",
+                "name",
+                "description",
+                "type"
+        }, null ,null, null, null, "id");
+        while (cursor.moveToNext()){
+            Product product = new Product();
+            product.setId(cursor.getInt(0));
+            product.setName(cursor.getString(1));
+            product.setDescription(cursor.getString(2));
+            product.setType(cursor.getInt(3));
+            products.add(product);
+        }
+        cursor.close();
+        database.close();
+        return products;
     }
 
     /**
