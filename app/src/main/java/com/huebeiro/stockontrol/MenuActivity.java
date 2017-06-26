@@ -56,13 +56,23 @@ implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         int position = recyclerView.getChildAdapterPosition(v);
+        Intent intent;
         switch (position){
             case 0:
-                Intent intent = new Intent(this, ProductActivity.class);
+                intent = new Intent(this, ProductActivity.class);
                 startActivity(intent);
                 break;
+            case 1:
+                intent = new Intent(this, PurchaseActivity.class);
+                startActivity(intent);
+                break;
+            case 2:
+                intent = new Intent(this, ExpenseActivity.class);
+                startActivity(intent);
+                break;
+
             default:
-                Toast.makeText(this, "Item clicked: " + position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Not implemented :(", Toast.LENGTH_SHORT).show();
         }
     }
 }

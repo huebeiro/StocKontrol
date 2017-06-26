@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">StocKontrol</string>
-    <string name="title_activity_product">ProductActivity</string>
+    <string name="title_activity_product">Products</string>
+    <string name="title_activity_new_product">New Product</string>
+    <string name="title_activity_purchase">Purchase</string>
+    <string name="title_activity_expense">Expend</string>
 </resources>

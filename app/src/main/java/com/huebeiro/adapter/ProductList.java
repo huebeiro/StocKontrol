@@ -30,22 +30,32 @@ public class ProductList extends CustomAdapter {
 		}
 	}
 
+    public void onDelete(int id){
+
+    }
+
 	@NonNull
 	@Override
 	public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
 	    View rowView = super.getView(position, convertView, parent);
 	    //Gets the view with default resources and inflated
 	    if(products.size() > position) {
-	    	Product product = products.get(position);
+	    	final Product product = products.get(position);
 	    	//Populate the view's items with the arraylist content
-		    ((TextView)rowView.findViewById(colId)).setText(String.valueOf(product.getId()));
-			((TextView)rowView.findViewById(colName)).setText(product.getName());
-			((ImageButton)rowView.findViewById(colButton)).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					//TODO Delete product
-				}
-			});
+            if(product.getId() != 0) {
+                ((TextView) rowView.findViewById(colId)).setText(String.valueOf(product.getId()));
+                ((TextView) rowView.findViewById(colName)).setText(product.getName());
+                rowView.findViewById(colButton).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onDelete(product.getId());
+                    }
+                });
+            } else {
+                ((TextView) rowView.findViewById(colId)).setText("");
+                ((TextView) rowView.findViewById(colName)).setText(product.getName());
+                rowView.findViewById(colButton).setVisibility(View.INVISIBLE);
+            }
 		}
 	    return rowView;
 	}

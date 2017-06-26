@@ -6,11 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.huebeiro.model.Expense;
-import com.huebeiro.model.ExpenseItem;
 import com.huebeiro.model.Product;
 import com.huebeiro.model.ProductType;
 import com.huebeiro.model.Purchase;
-import com.huebeiro.model.PurchaseItem;
 
 import java.util.ArrayList;
 
@@ -49,30 +47,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + Purchase.TABLE_NAME + " ( " +
                     "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "    note TEXT, " +
-                    "    date TEXT " +
-                    ");",
-            "CREATE TABLE " + PurchaseItem.TABLE_NAME + " ( " +
-                    "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "    purchase INTEGER, " +
                     "    product INTEGER, " +
                     "    quantity INTEGER, " +
                     "    price REAL, " +
-                    "    FOREIGN KEY(purchase) REFERENCES " + Purchase.TABLE_NAME + "(id) ON DELETE CASCADE, " +
                     "    FOREIGN KEY(product) REFERENCES " + Product.TABLE_NAME + "(id) ON DELETE CASCADE " +
                     ");",
             "CREATE TABLE " + Expense.TABLE_NAME + " ( " +
                     "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "    note TEXT, " +
-                    "    date TEXT " +
-                    ");",
-            "CREATE TABLE " + ExpenseItem.TABLE_NAME + " ( " +
-                    "    id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "    purchase INTEGER, " +
                     "    product INTEGER, " +
                     "    quantity INTEGER, " +
-                    "    price REAL, " +
-                    "    FOREIGN KEY(purchase) REFERENCES TIPO(id) ON DELETE CASCADE, " +
-                    "    FOREIGN KEY(product) REFERENCES TIPO(id) ON DELETE CASCADE " +
+                    "    FOREIGN KEY(product) REFERENCES " + Product.TABLE_NAME + "(id) ON DELETE CASCADE " +
                     ");"
     };
 
@@ -84,8 +69,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return database.rawQuery(sqlQuery, null);
     }
 
-    public void executetQuery(SQLiteDatabase database, String sqlQuery){
+    public void executeQuery(SQLiteDatabase database, String sqlQuery){
         database.execSQL(sqlQuery);
+    }
+
+    public ArrayList<ProductType> getProductTypes() {
+        ArrayList<ProductType> productTypes = new ArrayList<>();
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.query(ProductType.TABLE_NAME,new String[]{
+                "id",
+                "name"
+        }, null ,null, null, null, "id");
+        while (cursor.moveToNext()) {
+            ProductType productType = new ProductType();
+            productType.setId(cursor.getInt(0));
+            productType.setName(cursor.getString(1));
+            productTypes.add(productType);
+        }
+        cursor.close();
+        database.close();
+        return productTypes;
     }
 
     public ArrayList<Product> getProducts(){
@@ -108,6 +111,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         database.close();
         return products;
+    }
+
+    public void deleteProduct(int id){
+        SQLiteDatabase database = getWritableDatabase();
+        database.execSQL("DELETE FROM " + Product.TABLE_NAME + " WHERE id = " + id);
+        database.close();
+    }
+
+    public int getProductQuantity(int product) {
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.rawQuery(
+                "SELECT " +
+                        "IFNULL((SELECT SUM(quantity) FROM Purchase WHERE product = " + product + "),0) - " +
+                        "IFNULL((SELECT SUM(quantity) FROM Expense WHERE product = " + product + "),0)" +
+                        " as Total",
+                null);
+        int total = 0;
+        if(cursor.moveToNext()){
+            total = cursor.getInt(0);
+        }
+        cursor.close();
+        database.close();
+        return total;
     }
 
     /**
@@ -146,9 +172,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if(oldVersion != newVersion) {
-            db.execSQL("DROP TABLE " + ExpenseItem.TABLE_NAME);
             db.execSQL("DROP TABLE " + Expense.TABLE_NAME);
-            db.execSQL("DROP TABLE " + PurchaseItem.TABLE_NAME);
             db.execSQL("DROP TABLE " + Purchase.TABLE_NAME);
             db.execSQL("DROP TABLE " + Product.TABLE_NAME);
             db.execSQL("DROP TABLE " + ProductType.TABLE_NAME);

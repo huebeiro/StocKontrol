@@ -31,7 +31,7 @@ public class DBTestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SQLiteDatabase database = helper.getWritableDatabase();
                 String query = "INSERT INTO Product(name, description, type) VALUES (\"Coé\", \"Rapaziadaaaaaaaaa\", 1)";
-                helper.executetQuery(database, query);
+                helper.executeQuery(database, query);
                 Toast.makeText(DBTestActivity.this, "Inserted...", Toast.LENGTH_SHORT).show();
                 database.close();
             }
@@ -59,7 +59,7 @@ public class DBTestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SQLiteDatabase database = helper.getWritableDatabase();
                 String query = "DELETE FROM ProductType WHERE id = 1";
-                helper.executetQuery(database, query);
+                helper.executeQuery(database, query);
                 Toast.makeText(DBTestActivity.this, "DELETED...", Toast.LENGTH_SHORT).show();
                 database.close();
             }

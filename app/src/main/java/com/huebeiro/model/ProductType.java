@@ -7,7 +7,7 @@ package com.huebeiro.model;
 
 public class ProductType {
     private int id;
-    private int name;
+    private String name;
 
     public static final String TABLE_NAME = "ProductType";
 
@@ -19,11 +19,16 @@ public class ProductType {
         this.id = id;
     }
 
-    public int getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return id + " - " + name;
     }
 }

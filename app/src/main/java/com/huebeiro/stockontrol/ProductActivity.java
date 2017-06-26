@@ -45,8 +45,23 @@ public class ProductActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        updateList();
+    }
+
+    private void updateList(){
         products = helper.getProducts();
-        adapter = new ProductList(this, products);
+        if(products.size() == 0){
+            Product product = new Product();
+            product.setId(0);
+            product.setName("No products");
+        }
+        adapter = new ProductList(this, products){
+            @Override
+            public void onDelete(int id) {
+                helper.deleteProduct(id);
+                updateList();
+            }
+        };
         mainList.setAdapter(adapter);
     }
 }
