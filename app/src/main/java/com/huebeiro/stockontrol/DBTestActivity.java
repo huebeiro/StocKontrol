@@ -12,7 +12,7 @@ import com.huebeiro.database.DatabaseHelper;
 
 public class DBTestActivity extends AppCompatActivity {
 
-    Button btnInsert, btnSelect, btnDelete, btnSelectType;
+    Button btnInsert, btnSelect, btnDelete, btnSelectType, btnSelectProducts;
     DatabaseHelper helper;
 
     @Override

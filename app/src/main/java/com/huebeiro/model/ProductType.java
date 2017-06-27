@@ -8,6 +8,7 @@ package com.huebeiro.model;
 public class ProductType {
     private int id;
     private String name;
+    private double price;
 
     public static final String TABLE_NAME = "ProductType";
 
@@ -30,5 +31,13 @@ public class ProductType {
     @Override
     public String toString() {
         return id + " - " + name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

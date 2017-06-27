@@ -70,6 +70,14 @@ implements View.OnClickListener{
                 intent = new Intent(this, ExpenseActivity.class);
                 startActivity(intent);
                 break;
+            case 3:
+                intent = new Intent(this, StockActivity.class);
+                startActivity(intent);
+                break;
+            case 4:
+                intent = new Intent(this, DashboardActivity.class);
+                startActivity(intent);
+                break;
 
             default:
                 Toast.makeText(this, "Not implemented :(", Toast.LENGTH_SHORT).show();

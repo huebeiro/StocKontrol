@@ -13,7 +13,7 @@ public class Product {
     private String name;
     private String description;
     private int type;
-    private boolean active;
+    private int quantity;
 
     public int getId() {
         return id;
@@ -39,20 +39,20 @@ public class Product {
         this.description = description;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
     public int getType() {
         return type;
     }
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     @Override

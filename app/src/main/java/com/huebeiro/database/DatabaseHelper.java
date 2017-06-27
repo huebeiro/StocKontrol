@@ -113,6 +113,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return products;
     }
 
+    public ArrayList<Product> getProductsQuantity(){
+        ArrayList<Product> products = getProducts();
+        for(int i = 0; i < products.size(); i++){
+            products.get(i).setQuantity(getProductQuantity(products.get(i).getId()));
+        }
+        return products;
+    }
+
     public void deleteProduct(int id){
         SQLiteDatabase database = getWritableDatabase();
         database.execSQL("DELETE FROM " + Product.TABLE_NAME + " WHERE id = " + id);
@@ -134,6 +142,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         database.close();
         return total;
+    }
+
+    public ArrayList<ProductType> getMoneyExpent(){
+        ArrayList<ProductType> types = new ArrayList<>();
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.rawQuery(
+                "SELECT  " +
+                        "    pt.id, " +
+                        "    pt.name, " +
+                        "    SUM(IFNULL(pu.price,0)) total " +
+                        "FROM ProductType pt " +
+                        "LEFT JOIN Product p ON p.type = pt.id " +
+                        "LEFT JOIN Purchase pu ON pu.product = p.id " +
+                        "GROUP BY pt.id, pt.name",
+                null);
+        while(cursor.moveToNext()){
+            ProductType type = new ProductType();
+            type.setId(cursor.getInt(0));
+            type.setName(cursor.getString(1));
+            type.setPrice(cursor.getDouble(2));
+            types.add(type);
+        }
+        cursor.close();
+        database.close();
+        return types;
     }
 
     /**

@@ -20,6 +20,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,13 +31,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewProductActivity"
-            android:label="@string/title_activity_new_product"/>
+            android:label="@string/title_activity_new_product" />
         <activity
             android:name=".PurchaseActivity"
-            android:label="@string/title_activity_purchase"/>
+            android:label="@string/title_activity_purchase" />
         <activity
             android:name=".ExpenseActivity"
-            android:label="@string/title_activity_expense"/>
+            android:label="@string/title_activity_expense" />
+        <activity android:name=".StockActivity" />
+        <activity android:name=".DashboardActivity"></activity>
     </application>
 
 </manifest>
